@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+
+    ```
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            margin-top: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 60%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            width: 25%;
+            border-radius: 5px;
+            border: 1px solid gray;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .add { background: green; }
+        .update { background: orange; }
+        .delete { background: red; }
+        .fetch { background: blue; }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #4facfe;
+            color: white;
+        }
+    </style>
+    ```
+
+</head>
+
+<body>
+
+<h1>🎓 Student Management System</h1>
+
+<div class="container">
+
+    ```
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="email" placeholder="Email">
+    <input type="text" id="course" placeholder="Course">
+    <input type="number" id="id" placeholder="ID (for update/delete)">
+
+    <br>
+
+    <button class="add" onclick="addStudent()">Add</button>
+    <button class="update" onclick="updateStudent()">Update</button>
+    <button class="delete" onclick="deleteStudent()">Delete</button>
+    <button class="fetch" onclick="getStudents()">Show All</button>
+
+    <table id="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Course</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    ```
+
+</div>
+
+<script>
+
+    function addStudent() {
+        const student = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            course: document.getElementById("course").value
+        };
+
+        fetch('/students', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(student)
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            getStudents();
+        });
+    }
+
+    function getStudents() {
+        fetch('/students')
+        .then(res => res.json())
+        .then(data => {
+            let rows = "";
+            data.forEach(s => {
+                rows += `
+                    <tr>
+                        <td>${s.id}</td>
+                        <td>${s.name}</td>
+                        <td>${s.email}</td>
+                        <td>${s.course}</td>
+                    </tr>
+                `;
+            });
+            document.querySelector("#table tbody").innerHTML = rows;
+        });
+    }
+
+    function updateStudent() {
+        const id = document.getElementById("id").value;
+
+        const student = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            course: document.getElementById("course").value
+        };
+
+        fetch(`/students/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(student)
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            getStudents();
+        });
+    }
+
+    function deleteStudent() {
+        const id = document.getElementById("id").value;
+
+        fetch(`/students/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert(data);
+            getStudents();
+        });
+    }
+
+</script>
+
+</body>
+</html>
