@@ -3,13 +3,11 @@ package com.example.Spring.controller;
 import com.example.Spring.model.Student;
 import com.example.Spring.service.StudentService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-
     private final StudentService service;
 
     public StudentController(StudentService service) {
